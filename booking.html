@@ -364,7 +364,7 @@
   ];
 
   // 캠핑카/카라반/트레일러 전용 사이트 (Code.gs의 SPECIAL_SITE_RANGES와 맞춰주세요)
-  var SPECIAL_TYPE = '캠핑카·카라반·트레일러 전용사이트';
+  var SPECIAL_TYPE = '캠핑카·카라반·트레일러 전용 대형 사이트';
   var SPECIAL_PRICE = 200000;
   function isSpecialSite(zone, n) {
     return zone === 'C' && n >= 31 && n <= 38;
@@ -443,12 +443,8 @@
         zones[z][type].forEach(function(s) {
           var taken = s.status === '예약완료';
           var num = String(s.id).split('-').slice(1).join('-') || s.id;
-          var priceTag = '';
-          if (s.price) {
-            priceTag = '<span class="price-tag">' + (s.price > 0 ? '+' : '') + (s.price / 10000) + '만</span>';
-          }
           html += '<div class="site-btn' + (taken ? ' taken' : '') + (s.id === selectedSiteId ? ' sel' : '') +
-            '" data-id="' + s.id + '" data-price="' + s.price + '" data-type="' + type + '">' + num + priceTag + '</div>';
+            '" data-id="' + s.id + '" data-price="' + s.price + '" data-type="' + type + '">' + num + '</div>';
         });
         html += '</div>';
       });
@@ -465,12 +461,10 @@
         wrap.querySelectorAll('.site-btn').forEach(function(b) { b.classList.remove('sel'); });
         this.classList.add('sel');
         selectedSiteId = this.getAttribute('data-id');
-        var price = Number(this.getAttribute('data-price'));
         var type = this.getAttribute('data-type');
         var info = document.getElementById('siteSelectedInfo');
         info.style.display = 'block';
-        info.innerText = '선택한 사이트: ' + selectedSiteId + ' (' + type + ')' +
-          (price ? (price > 0 ? ' — 추가 ' + price.toLocaleString() + '원' : ' — 할인 ' + Math.abs(price).toLocaleString() + '원') : '');
+        info.innerText = '선택한 사이트: ' + selectedSiteId + ' (' + type + ')';
       });
     });
   }
