@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>참가 신청 · 호캠프 리턴즈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c1720;--ink-soft:#3b4a57;--muted:#6b7b88;--line:#e6ebef;
+    --bg:#f6f9fb;--card:#fff;--ocean:#0aa3c4;--ocean-deep:#036b85;
+    --ocean-pale:#dff3f8;--coral:#ff6b5b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh}
+  a{text-decoration:none;color:inherit}
+
+  nav{background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+  .nav-inner{max-width:680px;margin:0 auto;padding:15px 24px;display:flex;align-items:center;justify-content:space-between}
+  .nav-logo{font-family:'Archivo Black',sans-serif;font-size:16px;letter-spacing:-0.02em;display:flex;align-items:center;gap:8px}
+  .nav-dot{width:9px;height:9px;border-radius:50%;background:var(--ocean);box-shadow:0 0 0 3px var(--ocean-pale)}
+  .nav-back{font-size:13px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:4px;transition:color .2s}
+  .nav-back:hover{color:var(--ocean)}
+
+  .progress-wrap{max-width:680px;margin:0 auto;padding:20px 24px 0}
+  .progress-top{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px}
+  .progress-top .cur{color:var(--ocean)}
+  .progress-bar{height:4px;background:var(--line);border-radius:999px;overflow:hidden}
+  .progress-fill{height:100%;background:var(--ocean);border-radius:999px;transition:width .4s}
+
+  .form-header{max-width:680px;margin:24px auto 0;padding:0 24px}
+  .form-title{font-family:'Archivo Black',sans-serif;font-size:26px;letter-spacing:-0.03em;color:var(--ink);margin-bottom:6px}
+  .form-sub{font-size:14px;color:var(--muted);padding-bottom:16px;border-bottom:1px solid var(--line)}
+  .req-note{font-size:12px;color:var(--muted);padding:10px 0 4px}
+  .req-note span{color:var(--coral)}
+
+  .form-wrap{max-width:680px;margin:0 auto;padding:8px 24px 80px}
+
+  .field{background:var(--card);border-radius:12px;border:1px solid var(--line);padding:24px 20px;margin-bottom:12px}
+  .field-label{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px;display:flex;align-items:baseline;gap:4px}
+  .req{color:var(--coral);font-size:16px}
+  .field-hint{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5}
+
+  input[type=text],input[type=tel],textarea{
+    width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;
+    font-size:15px;font-family:'Noto Sans KR',sans-serif;color:var(--ink);background:#fff;outline:none;
+    transition:border-color .2s,box-shadow .2s;
+  }
+  input:focus,textarea:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(10,163,196,.1)}
+  textarea{resize:vertical;min-height:72px}
+
+  .opt-list{display:flex;flex-direction:column;gap:8px}
+  .opt-grid{display:flex;flex-wrap:wrap;gap:8px}
+  .opt-grid .opt{flex:1;min-width:70px;justify-content:center;padding:12px 8px;text-align:center}
+  .opt-grid .opt .opt-circle{display:none}
+  .opt{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;cursor:pointer;transition:all .15s;-webkit-user-select:none;user-select:none}
+  .opt input{display:none}
+  .opt-circle{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+  .opt-dot{width:8px;height:8px;border-radius:50%;background:transparent;transition:background .15s}
+  .opt.sel{border-color:var(--ocean);background:var(--ocean-pale)}
+  .opt.sel .opt-circle{border-color:var(--ocean)}
+  .opt.sel .opt-dot{background:var(--ocean)}
+  .opt-text{font-size:15px;color:var(--ink-soft)}
+  .opt.sel .opt-text{color:var(--ocean-deep);font-weight:600}
+
+  .agree-box{font-size:13px;color:var(--ink-soft);line-height:1.8;padding:16px;background:var(--bg);border-radius:10px;border:1px solid var(--line);margin-bottom:14px}
+  .agree-box strong{color:var(--ink)}
+
+  .btn-next{width:100%;padding:18px;border-radius:12px;background:var(--ink);color:#fff;font-family:'Archivo Black',sans-serif;font-size:17px;border:none;cursor:pointer;transition:all .25s;margin-top:20px}
+  .btn-next:hover{background:var(--ocean);box-shadow:0 8px 24px rgba(10,163,196,.3);transform:translateY(-1px)}
+  .btn-next:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+
+  /* PAGE 2 */
+  #page2{display:none}
+  #page3{display:none}
+  .success-wrap{max-width:680px;margin:0 auto;padding:60px 24px 80px;text-align:center}
+  .s-icon{font-size:64px;margin-bottom:20px}
+  .s-title{font-family:'Archivo Black',sans-serif;font-size:28px;letter-spacing:-0.02em;margin-bottom:12px}
+  .s-sub{font-size:16px;color:var(--ink-soft);line-height:1.8;margin-bottom:28px}
+  .s-card{background:#fff;border-radius:16px;border:1px solid var(--line);padding:24px 20px;margin-bottom:24px;text-align:left}
+  .s-card-label{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+  .s-card-value{font-size:14px;color:var(--ink);line-height:1.9;white-space:pre-line}
+  .btn-cafe{display:inline-flex;align-items:center;gap:8px;padding:16px 32px;border-radius:999px;background:var(--ocean);color:#fff;font-weight:700;font-size:15px;transition:all .25s}
+  .btn-cafe:hover{background:var(--ocean-deep);transform:translateY(-2px)}
+  .btn-home{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:999px;background:#fff;color:var(--ink-soft);border:1.5px solid var(--line);font-weight:600;font-size:14px;margin-top:12px;transition:all .25s}
+  .btn-home:hover{border-color:var(--ocean);color:var(--ocean)}
+
+  @media(max-width:480px){.form-title{font-size:22px}.field{padding:20px 16px}}
+
+  .check-list{display:flex;flex-direction:column;gap:8px}
+  .check-item{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;cursor:pointer;-webkit-user-select:none;user-select:none;transition:all .15s}
+  .check-item.sel{border-color:var(--ocean);background:var(--ocean-pale)}
+  .check-box{width:18px;height:18px;border-radius:4px;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;transition:all .15s}
+  .check-item.sel .check-box{border-color:var(--ocean);background:var(--ocean);color:#fff}
+  .check-item.sel .opt-text{color:var(--ocean-deep);font-weight:600}
+  .check-item *{pointer-events:none}
+  .opt *{pointer-events:none}
+
+  .agree-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px}
+  .agree-table th{background:var(--bg);color:var(--ink-soft);font-weight:700;padding:8px 10px;border:1px solid var(--line);text-align:center;white-space:nowrap}
+  .agree-table td{padding:9px 10px;border:1px solid var(--line);color:var(--ink);line-height:1.5;text-align:center;vertical-align:middle}
+  select{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;font-family:'Noto Sans KR',sans-serif;color:var(--ink);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7b88' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat right 16px center;appearance:none;-webkit-appearance:none;outline:none;cursor:pointer;}
+  select:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(10,163,196,.1)}
+
+  /* 사이트 선택 (실시간 재고) */
+  .site-refresh{font-size:12px;font-weight:600;color:var(--ocean);cursor:pointer;-webkit-user-select:none;user-select:none}
+  .site-refresh:hover{text-decoration:underline}
+  .site-loading{font-size:13px;color:var(--muted);padding:8px 0}
+  .site-zone{margin-bottom:16px}
+  .site-zone:last-child{margin-bottom:0}
+  .site-zone-title{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:.02em}
+  .site-grid{display:flex;flex-wrap:wrap;gap:6px}
+  .site-btn{min-width:46px;padding:8px 6px;text-align:center;border:1.5px solid var(--line);border-radius:8px;font-size:12px;font-weight:700;color:var(--ink-soft);cursor:pointer;background:#fff;transition:all .15s;-webkit-user-select:none;user-select:none}
+  .site-btn:hover{border-color:var(--ocean)}
+  .site-btn.sel{border-color:var(--ocean);background:var(--ocean);color:#fff}
+  .site-btn.taken{opacity:.35;cursor:not-allowed;background:var(--bg);text-decoration:line-through}
+  .site-btn .price-tag{display:block;font-size:9px;font-weight:700;margin-top:2px}
+  .site-legend{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:12px}
+  .site-legend span{display:inline-flex;align-items:center;gap:5px}
+  .site-legend i{width:10px;height:10px;border-radius:3px;border:1.5px solid var(--line);display:inline-block}
+  .site-legend i.taken{background:var(--bg);opacity:.6;text-decoration:line-through}
+  .site-legend i.sel{background:var(--ocean);border-color:var(--ocean)}
+  .site-selected-info{display:none;margin-top:12px;padding:10px 12px;background:var(--ocean-pale);border-radius:8px;font-size:13px;color:var(--ocean-deep);font-weight:700}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo"><span class="nav-dot"></span>9th 호캠프 리턴즈</div>
+    <a href="index.html" class="nav-back">← 메인으로</a>
+  </div>
+</nav>
+
+<!-- PAGE 1 -->
+<div id="page1">
+  <div class="progress-wrap">
+    <div class="progress-top"><span class="cur">1페이지</span><span>2페이지 중</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+  </div>
+  <div class="form-header">
+    <h1 class="form-title">호캠프 리턴즈 참가 신청서</h1>
+    <p class="form-sub">제 9회 호캠프 페스티벌 참가 신청서 (개인정보)</p>
+    <p class="req-note"><span>*</span> 표시는 필수 항목입니다</p>
+  </div>
+  <div class="form-wrap">
+
+    <div class="field">
+      <div class="field-label">대표자 이름 (예시 홍길동) <span class="req">*</span></div>
+      <input type="text" id="name" placeholder="내 답변" />
+    </div>
+
+    <div class="field">
+      <div class="field-label">연락처 (대표자 휴대폰 번호) <span class="req">*</span></div>
+      <input type="tel" id="phone" placeholder="내 답변" />
+    </div>
+
+    <div class="field">
+      <div class="field-label">참여 인원 어른 (성인) <span class="req">*</span></div>
+      <div class="field-hint">기준인원은 성인 2명 아동 3명 (성인 1인 추가시 2만원의 비용이 추가됩니다.)</div>
+      <div class="opt-grid" id="g-adult">
+        <div class="opt" data-g="adult" data-value="1명"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">1명</span></div>
+        <div class="opt" data-g="adult" data-value="2명"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">2명</span></div>
+        <div class="opt" data-g="adult" data-value="3명"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">3명</span></div>
+        <div class="opt" data-g="adult" data-value="4명"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">4명</span></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">참여 인원 아동 (미성년자 자녀) <span class="req">*</span></div>
+      <div class="field-hint">기준인원은 성인 2명 아동 3명 (아동 1인 추가시 2만원의 비용이 추가됩니다.)</div>
+      <div class="opt-grid" id="g-child">
+        <div class="opt" data-g="child" data-value="0명"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">0명</span></div>
+        <div class="opt" data-g="child" data-value="1명"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">1명</span></div>
+        <div class="opt" data-g="child" data-value="2명"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">2명</span></div>
+        <div class="opt" data-g="child" data-value="3명"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">3명</span></div>
+        <div class="opt" data-g="child" data-value="4명"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">4명</span></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">거주지역 <span class="req">*</span></div>
+      <select id="regionSelect">
+        <option value="">선택해 주세요</option>
+        <option>서울</option>
+        <option>경기도 (인천)</option>
+        <option>강원도</option>
+        <option>충청남도 (대전, 세종)</option>
+        <option>충청북도</option>
+        <option>경상남도 (부산, 울산)</option>
+        <option>경상북도 (대구)</option>
+        <option>전라남도 (광주)</option>
+        <option>전라북도특별자치도</option>
+        <option>제주특별자치도</option>
+        <option>그외 지역 혹은 해외</option>
+      </select>
+    </div>
+
+    <button class="btn-next" onclick="goPage2()">다음 →</button>
+
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2">
+  <div class="progress-wrap">
+    <div class="progress-top"><span class="cur">2페이지</span><span>2페이지 중</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+  </div>
+  <div class="form-header">
+    <h1 class="form-title" style="font-size:20px">캠핑 정보</h1>
+    <p class="req-note"><span>*</span> 표시는 필수 항목입니다</p>
+  </div>
+  <div class="form-wrap">
+
+    <div class="field">
+      <div class="field-label">캠핑 유형 <span class="req">*</span></div>
+      <div class="opt-list" id="g-campType">
+        <div class="opt" data-g="campType" data-value="텐트"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">텐트</span></div>
+        <div class="opt" data-g="campType" data-value="카라반 / 트레일러"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">카라반 / 트레일러</span></div>
+        <div class="opt" data-g="campType" data-value="모터홈 / 캠핑카"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">모터홈 / 캠핑카</span></div>
+        <div class="opt" data-g="campType" data-value="차박 / 루프탑텐트"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">차박 / 루프탑텐트</span></div>
+        <div class="opt" data-g="campType" data-value="펜션"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">펜션</span></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">네이버 카페 닉네임 (호의로운 캠핑단) <span class="req">*</span></div>
+      <div class="field-hint"><strong>호의로운 캠핑단 네이버 카페 닉네임을 적어주세요. 꼭 동일하게 작성 부탁드려요</strong><br>신규 회원분들은 가입을 하고 가입인사 부탁드려요 닉네임 양식 (닉네임 지역)</div>
+      <input type="text" id="cafeNick" placeholder="내 답변" />
+    </div>
+
+    <div class="field">
+      <div class="field-label" style="display:flex;justify-content:space-between;align-items:center">
+        <span>사이트 선택 <span class="req">*</span></span>
+        <span class="site-refresh" id="siteRefresh">↻ 실시간 재고 새로고침</span>
+      </div>
+      <div class="field-hint">구역과 번호를 확인하고 원하는 사이트를 선택해 주세요. 회색으로 표시되고 취소선이 그어진 사이트는 이미 예약이 완료된 자리입니다. 선택과 동시에 예약이 확정되지는 않으며, 제출 버튼을 눌러야 최종 확정됩니다.</div>
+      <div class="site-loading" id="siteLoading">사이트 실시간 재고를 불러오는 중...</div>
+      <div id="siteMap" style="display:none"></div>
+      <div class="site-legend">
+        <span><i></i>선택 가능</span>
+        <span><i class="sel"></i>선택함</span>
+        <span><i class="taken"></i>예약 마감</span>
+      </div>
+      <div class="site-selected-info" id="siteSelectedInfo"></div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">함께 신청하는 지인 일행이 있나요?</div>
+      <div class="field-hint">지인 일행이 있는 경우 닉네임을 적어주세요</div>
+      <input type="text" id="friendNick" placeholder="내 답변" />
+    </div>
+
+    <div class="field">
+      <div class="field-label">도착 예정 시간 <span class="req">*</span></div>
+      <div class="field-hint">체크인 시간은 13시부터입니다.</div>
+      <select id="arrivalTime">
+        <option value="">선택해 주세요</option>
+        <option value="13:00">13:00</option>
+        <option value="14:00">14:00</option>
+        <option value="15:00">15:00</option>
+        <option value="16:00">16:00</option>
+        <option value="17:00">17:00</option>
+        <option value="18:00">18:00</option>
+        <option value="19:00">19:00</option>
+        <option value="20:00">20:00</option>
+        <option value="21:00">21:00</option>
+        <option value="22:00">22:00</option>
+        <option value="23:00">23:00</option>
+        <option value="24:00">24:00</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <div class="field-label">하고 싶은 말</div>
+      <textarea id="message" placeholder="내 답변"></textarea>
+    </div>
+
+    <div class="field">
+      <div class="field-label">촬영 안내 및 동의 (초상권 동의) <span class="req">*</span></div>
+      <div class="agree-box">
+        호캠프 페스티벌은 (캠핑여지도) 유튜브 호캠프 채널에서 운영하는 행사이며 호캠프 페스티벌과 협찬사 홍보를 위해 유튜브 촬영이 진행됩니다.<br><br>
+        호캠프 채널 뿐만 아니라 협력 유튜브 채널 및 방송사에서 촬영이 있을 수 있습니다.<br><br>
+        촬영이 불편하신 분들을 집중적으로 촬영을 하지 않으나 행사 전체 진행 과정이 촬영될 예정입니다.<br><br>
+        ※ 동의를 거부하실 수 있으나, 거부 시 참여가 불가합니다.
+      </div>
+      <div class="opt-list" id="g-filming">
+        <div class="opt" data-g="filming" data-value="동의"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">동의</span></div>
+        <div class="opt" data-g="filming" data-value="비동의"><span class="opt-circle"><span class="opt-dot"></span></span><span class="opt-text">비동의</span></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:20px">
+      <button class="btn-next" style="background:var(--bg);color:var(--ink-soft);border:1.5px solid var(--line);flex:0 0 100px" onclick="backPage1()">← 이전</button>
+      <button class="btn-next" id="submitBtn" style="flex:1" onclick="submitForm()">제출하기 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3 완료 -->
+<div id="page3">
+  <div class="progress-wrap">
+    <div class="progress-top"><span class="cur">완료</span><span></span></div>
+    <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+  </div>
+  <div class="success-wrap">
+    <div class="s-icon">🏕️</div>
+    <h2 class="s-title">신청이 완료됐어요!</h2>
+    <p class="s-sub">
+      호캠프 리턴즈 참가 신청이 접수되었습니다.<br>
+      선정 결과는 신청 후 <strong>일주일 이내</strong><br>
+      네이버 카페 <strong>"호의로운 캠핑단"</strong>에 공개됩니다.<br><br>
+      명단 확인 후 참가비를 입금해 주시면 최종 확정됩니다. 🏕️
+    </p>
+    <div class="s-card">
+      <div class="s-card-label">접수 내용 요약</div>
+      <div class="s-card-value" id="summaryBox"></div>
+    </div>
+    <div class="s-card" style="border-left:4px solid var(--ocean)">
+      <div class="s-card-label" style="color:var(--ocean)">💰 예상 참가비</div>
+      <div id="feeBox" style="font-size:15px;color:var(--ink);line-height:2"></div>
+      <div id="feeTotalBox" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-family:'Archivo Black',sans-serif;font-size:22px;color:var(--ocean)"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center">
+      <div id="gform-link-wrap" style="margin-bottom:12px;display:none">
+        <a id="gform-link" href="#" target="_blank" class="btn-cafe" style="background:var(--coral)">
+          📋 구글폼에서 최종 제출하기 →
+        </a>
+        <p style="font-size:12px;color:var(--muted);margin-top:8px">팝업이 차단된 경우 위 버튼을 눌러 직접 제출해 주세요</p>
+      </div>
+      <a href="https://cafe.naver.com/hocamp" target="_blank" class="btn-cafe">☕ 호의로운 캠핑단 카페 바로가기 →</a>
+      <a href="mypage.html" class="btn-home" style="background:var(--ocean-pale);border-color:var(--ocean);color:var(--ocean-deep)">🔍 예약 내역 확인하기</a>
+      <a href="index.html" class="btn-home">← 메인 페이지로</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // ─────────────────────────────────────────────
+  // 사이트 실시간 재고 (구글시트 + Apps Script)
+  // ─────────────────────────────────────────────
+  // 1) 구글시트를 만들고 Apps Script를 배포한 뒤, 아래 URL을 배포된 웹앱 URL로 교체하세요.
+  // 2) URL을 넣지 않으면 아래 ZONE_FALLBACK 구성으로 임시(데모) 사이트 맵이 표시됩니다.
+  //    (이 경우 실시간 재고 체크 없이 바로 제출됩니다 — 실제 운영 전에는 꼭 URL을 연결하세요)
+  var SITE_API_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+  var ZONE_FALLBACK = [
+    { zone:'A', start:1,  end:20 },
+    { zone:'C', start:23, end:38 },
+    { zone:'D', start:41, end:42 },
+    { zone:'F', start:50, end:54 },
+    { zone:'G', start:57, end:57 },
+    { zone:'H', start:58, end:68 }
+  ];
+
+  // 번호 규칙에서 벗어나는 개별 사이트 (Code.gs의 EXTRA_SITES와 맞춰주세요)
+  var EXTRA_SITES_FALLBACK = [
+    { zone:'C', id:'C-30-1' },
+    { zone:'C', id:'C-30-2' }
+  ];
+
+  // 캠핑카/카라반/트레일러 전용 사이트 (Code.gs의 SPECIAL_SITE_RANGES와 맞춰주세요)
+  var SPECIAL_TYPE = '캠핑카·카라반·트레일러 전용사이트';
+  var SPECIAL_PRICE = 200000;
+  function isSpecialSite(zone, n) {
+    return zone === 'C' && n >= 31 && n <= 38;
+  }
+
+  var siteData = [];
+  var selectedSiteId = null;
+
+  function isApiConfigured() {
+    return SITE_API_URL && SITE_API_URL.indexOf('PASTE_YOUR') === -1;
+  }
+
+  function buildFallbackSites() {
+    var list = [];
+    ZONE_FALLBACK.forEach(function(z) {
+      for (var n = z.start; n <= z.end; n++) {
+        if (isSpecialSite(z.zone, n)) {
+          list.push({ id: z.zone + '-' + n, zone: z.zone, type: SPECIAL_TYPE, price: SPECIAL_PRICE, status: '예약가능' });
+        } else {
+          list.push({ id: z.zone + '-' + n, zone: z.zone, type: '일반사이트', price: 0, status: '예약가능' });
+        }
+      }
+    });
+    EXTRA_SITES_FALLBACK.forEach(function(s) {
+      list.push({ id: s.id, zone: s.zone, type: '일반사이트', price: 0, status: '예약가능' });
+    });
+    return list;
+  }
+
+  function loadSites() {
+    document.getElementById('siteLoading').style.display = 'block';
+    document.getElementById('siteLoading').innerText = '사이트 실시간 재고를 불러오는 중...';
+    document.getElementById('siteMap').style.display = 'none';
+
+    if (!isApiConfigured()) {
+      siteData = buildFallbackSites();
+      renderSiteMap();
+      return;
+    }
+
+    fetch(SITE_API_URL + '?action=list')
+      .then(function(res) { return res.json(); })
+      .then(function(json) {
+        siteData = (json && json.success && json.sites) ? json.sites : buildFallbackSites();
+        renderSiteMap();
+      })
+      .catch(function() {
+        document.getElementById('siteLoading').innerText = '재고 정보를 불러오지 못했어요. 새로고침을 눌러 다시 시도해 주세요.';
+        siteData = buildFallbackSites();
+        renderSiteMap();
+      });
+  }
+
+  function renderSiteMap() {
+    var wrap = document.getElementById('siteMap');
+    // 구역별로 묶은 뒤, 한 구역 안에서도 타입이 다르면(예: 캠핑카 전용 사이트) 서브그룹으로 나눠서 보여줍니다.
+    var zones = {};
+    var zoneTypeOrder = {};
+    siteData.forEach(function(s) {
+      if (!zones[s.zone]) { zones[s.zone] = {}; zoneTypeOrder[s.zone] = []; }
+      var type = s.type || '일반사이트';
+      if (!zones[s.zone][type]) { zones[s.zone][type] = []; zoneTypeOrder[s.zone].push(type); }
+      zones[s.zone][type].push(s);
+    });
+
+    var html = '';
+    Object.keys(zones).sort().forEach(function(z) {
+      var types = zoneTypeOrder[z];
+      var multiType = types.length > 1;
+      html += '<div class="site-zone"><div class="site-zone-title">' + z + '구역</div>';
+      types.forEach(function(type) {
+        if (multiType) {
+          html += '<div style="font-size:11px;font-weight:700;color:var(--ocean-deep);margin:6px 0 4px">' + type + '</div>';
+        }
+        html += '<div class="site-grid">';
+        zones[z][type].forEach(function(s) {
+          var taken = s.status === '예약완료';
+          var num = String(s.id).split('-').slice(1).join('-') || s.id;
+          var priceTag = '';
+          if (s.price) {
+            priceTag = '<span class="price-tag">' + (s.price > 0 ? '+' : '') + (s.price / 10000) + '만</span>';
+          }
+          html += '<div class="site-btn' + (taken ? ' taken' : '') + (s.id === selectedSiteId ? ' sel' : '') +
+            '" data-id="' + s.id + '" data-price="' + s.price + '" data-type="' + type + '">' + num + priceTag + '</div>';
+        });
+        html += '</div>';
+      });
+      html += '</div>';
+    });
+    wrap.innerHTML = html || '<div class="site-loading">등록된 사이트가 없습니다.</div>';
+
+    document.getElementById('siteLoading').style.display = 'none';
+    wrap.style.display = 'block';
+
+    wrap.querySelectorAll('.site-btn:not(.taken)').forEach(function(btn) {
+      btn.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        wrap.querySelectorAll('.site-btn').forEach(function(b) { b.classList.remove('sel'); });
+        this.classList.add('sel');
+        selectedSiteId = this.getAttribute('data-id');
+        var price = Number(this.getAttribute('data-price'));
+        var type = this.getAttribute('data-type');
+        var info = document.getElementById('siteSelectedInfo');
+        info.style.display = 'block';
+        info.innerText = '선택한 사이트: ' + selectedSiteId + ' (' + type + ')' +
+          (price ? (price > 0 ? ' — 추가 ' + price.toLocaleString() + '원' : ' — 할인 ' + Math.abs(price).toLocaleString() + '원') : '');
+      });
+    });
+  }
+
+  function reserveSiteOnServer(siteId, name, phone) {
+    if (!isApiConfigured()) {
+      // 데모 모드: 실서비스 전이므로 재고 체크 없이 통과
+      return Promise.resolve({ success: true });
+    }
+    var body = new URLSearchParams({ action: 'reserve', siteId: siteId, name: name, phone: phone });
+    return fetch(SITE_API_URL, { method: 'POST', body: body })
+      .then(function(res) { return res.json(); })
+      .catch(function() {
+        return { success: false, message: '예약 서버에 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.' };
+      });
+  }
+
+  window.__hocampSite = {
+    getSelectedId: function() { return selectedSiteId; },
+    getSiteData: function() { return siteData; },
+    reserve: reserveSiteOnServer,
+    reload: loadSites
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    loadSites();
+    document.getElementById('siteRefresh').addEventListener('click', function() {
+      selectedSiteId = null;
+      document.getElementById('siteSelectedInfo').style.display = 'none';
+      loadSites();
+    });
+  });
+})();
+
+(function() {
+  document.addEventListener('DOMContentLoaded', function() {
+
+    // ── 라디오 옵션 (opt) ──
+    document.querySelectorAll('.opt').forEach(function(el) {
+      el.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        var g = this.getAttribute('data-g');
+        document.querySelectorAll('.opt[data-g="' + g + '"]').forEach(function(o) { o.classList.remove('sel'); });
+        this.classList.add('sel');
+      });
+    });
+
+  });
+
+  function getVal(name) {
+    var el = document.querySelector('.opt[data-g="' + name + '"].sel');
+    return el ? el.getAttribute('data-value') : null;
+  }
+
+  var p1data = {};
+
+  window.goPage2 = function() {
+    var name   = document.getElementById('name').value.trim();
+    var phone  = document.getElementById('phone').value.trim();
+    var adult  = getVal('adult');
+    var child  = getVal('child');
+    var region = document.getElementById('regionSelect').value;
+
+    if (!name)   { alert('대표자 이름을 입력해 주세요.'); return; }
+    if (!phone)  { alert('연락처를 입력해 주세요.'); return; }
+    if (!adult)  { alert('성인 인원을 선택해 주세요.'); return; }
+    if (!child)  { alert('아동 인원을 선택해 주세요.'); return; }
+    if (!region) { alert('거주지역을 선택해 주세요.'); return; }  // select
+
+    p1data = { name:name, phone:phone, adult:adult, child:child, region:region };
+
+    document.getElementById('page1').style.display = 'none';
+    document.getElementById('page2').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.backPage1 = function() {
+    document.getElementById('page2').style.display = 'none';
+    document.getElementById('page1').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.submitForm = function() {
+    var campType    = getVal('campType');
+    var cafeNick    = document.getElementById('cafeNick').value.trim();
+    var friendNick  = document.getElementById('friendNick').value.trim();
+    var arrivalTime = document.getElementById('arrivalTime').value.trim();
+    var filming     = getVal('filming');
+    var msg         = document.getElementById('message').value.trim();
+    var selectedSiteId = window.__hocampSite.getSelectedId();
+
+    if (!campType)    { alert('캠핑 유형을 선택해 주세요.'); return; }
+    if (!cafeNick)    { alert('네이버 카페 닉네임을 입력해 주세요.'); return; }
+    if (!selectedSiteId) { alert('사이트를 선택해 주세요.'); return; }
+    if (!arrivalTime) { alert('도착 예정 시간을 입력해 주세요.'); return; }
+    if (!filming)     { alert('촬영 동의 여부를 선택해 주세요.'); return; }
+    if (filming === '비동의') { alert('촬영에 동의하지 않으면 참가가 불가합니다.'); return; }
+
+    var siteObj = window.__hocampSite.getSiteData().find(function(s) { return s.id === selectedSiteId; });
+    if (!siteObj) { alert('선택한 사이트 정보를 찾을 수 없습니다. 새로고침 후 다시 선택해 주세요.'); return; }
+
+    var submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerText = '사이트 예약 확인 중...';
+
+    window.__hocampSite.reserve(selectedSiteId, p1data.name, p1data.phone).then(function(result) {
+      if (!result || !result.success) {
+        alert((result && result.message) || '선택한 사이트가 방금 마감되었습니다. 다른 사이트를 선택해 주세요.');
+        submitBtn.disabled = false;
+        submitBtn.innerText = '제출하기 →';
+        window.__hocampSite.reload();
+        return;
+      }
+      finalizeSubmit(siteObj, campType, cafeNick, friendNick, arrivalTime, filming, msg);
+    });
+  };
+
+  function finalizeSubmit(siteObj, campType, cafeNick, friendNick, arrivalTime, filming, msg) {
+    var siteLabel = siteObj.id + (siteObj.type ? ' (' + siteObj.type + ')' : '');
+
+    // 접수 요약
+    var lines = [
+      '대표자: ' + p1data.name,
+      '연락처: ' + p1data.phone,
+      '성인: ' + p1data.adult + ' / 아동: ' + p1data.child
+    ];
+    lines.push('거주지역: ' + p1data.region);
+    lines.push('─────────────');
+    lines.push('캠핑 유형: ' + campType);
+    lines.push('카페 닉네임: ' + cafeNick);
+    lines.push('사이트: ' + siteLabel);
+    lines.push('지인 일행: ' + (friendNick || '없음'));
+    lines.push('도착 예정: ' + arrivalTime);
+    if (msg) lines.push('하고 싶은 말: ' + msg);
+    lines.push('촬영 동의: ' + filming);
+
+    document.getElementById('summaryBox').innerText = lines.join('\n');
+
+    // 구글폼 전송
+    var formUrl = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSczoNd482OHsH9vuhyrHkFJpuFkpvvEX4gZHM9-fb2mmrJsPQ/formResponse';
+    var params = new URLSearchParams();
+    params.append('entry.1912926423', p1data.name);
+    params.append('entry.1239222796', p1data.phone);
+    params.append('entry.1357739873', p1data.adult);
+    params.append('entry.312724505',  p1data.child);
+    params.append('entry.1582856050', p1data.region);
+    // 2페이지
+    params.append('entry.196725166',  cafeNick);
+    params.append('entry.407771982',  siteLabel);
+    params.append('entry.633618288',  campType);
+    params.append('entry.1005991624', friendNick || '');
+    params.append('entry.782972763',  arrivalTime);
+    params.append('entry.710258770',  msg || '');
+    params.append('entry.2000713890', filming);
+    params.append('fvv', '1');
+    params.append('pageHistory', '0,1');
+
+    // 구글폼 prefill URL로 이동 (가장 확실한 방법)
+    var base = 'https://docs.google.com/forms/d/e/1FAIpQLSczoNd482OHsH9vuhyrHkFJpuFkpvvEX4gZHM9-fb2mmrJsPQ/viewform';
+    var q = '?usp=pp_url';
+    q += '&entry.1912926423=' + encodeURIComponent(p1data.name);
+    q += '&entry.1239222796=' + encodeURIComponent(p1data.phone);
+    q += '&entry.1357739873=' + encodeURIComponent(p1data.adult.replace('명',''));
+    q += '&entry.312724505='  + encodeURIComponent(p1data.child.replace('명',''));
+    q += '&entry.1582856050=' + encodeURIComponent(p1data.region);
+    q += '&entry.196725166='  + encodeURIComponent(cafeNick);
+    q += '&entry.407771982='  + encodeURIComponent(siteLabel);
+    q += '&entry.633618288='  + encodeURIComponent(campType);
+    q += '&entry.1005991624=' + encodeURIComponent(friendNick || '없음');
+    q += '&entry.782972763='  + encodeURIComponent(arrivalTime);
+    q += '&entry.710258770='  + encodeURIComponent(msg || '');
+    q += '&entry.2000713890=' + encodeURIComponent(filming);
+
+    // 요금 계산
+    var fee = 180000;
+    var feeLines = ['기본 참가비: 180,000원'];
+
+    var adultNum = parseInt(p1data.adult);
+    if (adultNum >= 3) {
+      var adultExtra = (adultNum - 2) * 20000;
+      fee += adultExtra;
+      feeLines.push('성인 추가 ' + (adultNum - 2) + '명: +' + adultExtra.toLocaleString() + '원');
+    }
+    var childNum = parseInt(p1data.child);
+    if (childNum >= 4) {
+      var childExtra = (childNum - 3) * 20000;
+      fee += childExtra;
+      feeLines.push('아동 추가 ' + (childNum - 3) + '명: +' + childExtra.toLocaleString() + '원 (1인 2만원)');
+    }
+    if (siteObj.price) {
+      fee += siteObj.price;
+      feeLines.push('사이트 (' + siteObj.id + '): ' + (siteObj.price > 0 ? '+' : '') + siteObj.price.toLocaleString() + '원');
+    }
+
+    document.getElementById('feeBox').innerHTML = feeLines.join('<br>');
+    document.getElementById('feeTotalBox').innerHTML = '총 예상 참가비: <strong>' + fee.toLocaleString() + '원</strong>';
+
+    document.getElementById('page2').style.display = 'none';
+    document.getElementById('page3').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 구글폼 prefill URL 새 탭으로 열기 — page3 전환 후 실행
+    var fullUrl = base + q;
+    document.getElementById('gform-link').href = fullUrl;
+    document.getElementById('gform-link-wrap').style.display = 'block';
+    setTimeout(function() {
+      window.open(fullUrl, '_blank');
+    }, 500);
+  }
+
+})();
+</script>
+
+</body>
+</html>
