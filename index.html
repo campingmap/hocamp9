@@ -87,9 +87,10 @@
     .orb-a { animation: floatY 9s ease-in-out infinite; }
     .orb-b { animation: floatY2 11s ease-in-out infinite; }
 
-    /* Marquee */
-    @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
-    .marquee-track { animation: marquee 34s linear infinite; }
+    /* Marquee — 한 세트 너비만큼만 이동해 끊김 없이 무한 반복 */
+    @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(calc(-1 * var(--mq-shift, 50%))) } }
+    .marquee-track { animation: marquee var(--mq-dur, 34s) linear infinite; will-change: transform; }
+    .marquee-track:hover { animation-play-state: paused; }
 
     /* Film grain noise overlay */
     .noise::before {
@@ -1004,6 +1005,46 @@
       open && open.addEventListener('click', show);
       close && close.addEventListener('click', hide);
       document.querySelectorAll('.mob-link').forEach(a => a.addEventListener('click', hide));
+    })();
+
+    // 협력 브랜드 로고 띠 — 화면 너비에 맞춰 세트를 복제해 끊김 없이 무한 반복
+    (function () {
+      const track = document.querySelector('.marquee-track');
+      if (!track) return;
+
+      const SPEED = 26; // 초당 이동 픽셀 (숫자를 키우면 빨라집니다)
+      const original = track.firstElementChild;
+      if (!original) return;
+
+      function build() {
+        // 이전에 만든 복제본 제거 후 원본 하나만 남깁니다
+        while (track.children.length > 1) track.lastElementChild.remove();
+
+        const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+        const setWidth = original.getBoundingClientRect().width;
+        if (!setWidth) return;
+
+        // 한 세트가 화면보다 좁으면 빈칸이 생기므로, 화면을 덮고도 남을 만큼 복제합니다
+        const viewport = track.parentElement.getBoundingClientRect().width;
+        const copies = Math.max(2, Math.ceil((viewport + setWidth) / (setWidth + gap)) + 1);
+
+        for (let i = 1; i < copies; i++) {
+          const clone = original.cloneNode(true);
+          clone.setAttribute('aria-hidden', 'true');
+          track.appendChild(clone);
+        }
+
+        // 세트 하나 너비(+간격)만큼만 이동하면 다음 세트가 정확히 이어집니다
+        const shift = setWidth + gap;
+        track.style.setProperty('--mq-shift', shift + 'px');
+        track.style.setProperty('--mq-dur', (shift / SPEED) + 's');
+      }
+
+      build();
+      // 로고 이미지가 다 로드된 뒤 너비가 확정되므로 한 번 더 계산합니다
+      window.addEventListener('load', build);
+      let t;
+      window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(build, 200); });
     })();
 
     // 시즌 슬라이드 — 슬라이드마다 지정된 시간(data-dur)만큼 보여주고 자동 전환
