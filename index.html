@@ -218,6 +218,58 @@
 
 <body class="noise bg-white text-stone-700 font-sans antialiased selection:bg-gold-300/40 selection:text-forest-900 min-h-[100dvh]">
 
+  <!--
+    ┌──────────────────────────────────────────────────────────────────┐
+    │ 긴급 공지 (행사 잠정 보류)                                          │
+    │                                                                  │
+    │ 행사가 재개되면 페이지 맨 아래 스크립트에서                          │
+    │   const POSTPONED = true;  →  false 로 바꾸면                     │
+    │ 팝업·상단 띠가 사라지고 참가신청 버튼이 원래대로 돌아옵니다.           │
+    │ 문구를 고치려면 아래 두 곳(띠 / 팝업)의 글자만 수정하세요.            │
+    └──────────────────────────────────────────────────────────────────┘
+  -->
+  <div id="noticeBar" class="fixed inset-x-0 top-0 z-[65] hidden bg-[#b4231d] text-white">
+    <div class="mx-auto flex w-[min(94%,74rem)] items-center justify-center gap-2 px-4 py-2.5 text-center">
+      <iconify-icon icon="solar:danger-triangle-bold" class="shrink-0 text-[17px] text-amber-200"></iconify-icon>
+      <p class="text-[13px] font-bold leading-snug sm:text-[14px]">
+        [긴급 공지] 캠핑장 긴급 공사로 호캠프 페스티벌이 <u>잠정 보류</u>되었습니다
+      </p>
+      <button type="button" id="noticeBarMore" class="ml-1 shrink-0 rounded-full bg-white/20 px-2.5 py-1 text-[12px] font-bold u-ease hover:bg-white/35">자세히</button>
+    </div>
+  </div>
+
+  <div id="noticeModal" class="fixed inset-0 z-[80] hidden items-center justify-center px-5" role="dialog" aria-modal="true" aria-labelledby="noticeTitle">
+    <div class="absolute inset-0 bg-stone-900/75 backdrop-blur-sm" data-close-notice></div>
+    <div class="relative w-full max-w-md rounded-[2rem] border border-stone-200 bg-white p-1.5 shadow-softlg">
+      <div class="rounded-[calc(2rem-0.375rem)] px-7 py-9 text-center">
+        <span class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#b4231d] text-white">
+          <iconify-icon icon="solar:danger-triangle-bold" class="text-3xl"></iconify-icon>
+        </span>
+
+        <p class="mt-5 text-[12px] font-bold tracking-[0.12em] text-[#b4231d]">긴급 공지</p>
+        <h3 id="noticeTitle" class="mt-2 text-[22px] font-extrabold leading-snug text-stone-900">
+          호캠프 페스티벌<br />잠정 보류 안내
+        </h3>
+
+        <p class="mt-5 text-[15px] leading-relaxed text-stone-600">
+          진행 예정이던 캠핑장에 문제가 생겨<br />
+          긴급 공사로 인해<br />
+          호캠프 페스티벌이 잠정 보류되었습니다.
+        </p>
+        <p class="mt-4 text-[15px] font-semibold leading-relaxed text-forest-800">
+          빠른 시일내로 새 소식을 전달하겠습니다.
+        </p>
+
+        <button type="button" id="noticeClose" class="mt-7 w-full rounded-full bg-forest-600 px-6 py-3.5 text-[15px] font-semibold text-white u-ease hover:bg-forest-500 active:scale-[0.98]">확인</button>
+
+        <label class="mt-4 flex cursor-pointer items-center justify-center gap-2 text-[13px] text-stone-500">
+          <input type="checkbox" id="noticeHideToday" class="h-4 w-4 rounded border-stone-300 text-forest-600 focus:ring-forest-500" />
+          오늘 하루 보지 않기
+        </label>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= BACKGROUND FIELD ================= -->
   <div aria-hidden="true" class="fixed inset-0 -z-10 overflow-hidden">
     <div class="absolute inset-0 bg-white"></div>
@@ -1204,6 +1256,82 @@
       });
     })();
 
+    // ┌────────────────────────────────────────────────────────────────┐
+    // │ 행사 보류 상태                                                    │
+    // │ 행사가 재개되면 아래 값을 false 로 바꾸세요.                        │
+    // │ true  : 긴급 공지 팝업 + 상단 띠 표시, 참가신청 버튼은 공지로 연결   │
+    // │ false : 공지가 사라지고 원래 참가신청 동작(구글폼)으로 복귀          │
+    // └────────────────────────────────────────────────────────────────┘
+    const POSTPONED = true;
+
+    // 긴급 공지 — 접속 시 팝업, 닫아도 상단 띠는 계속 표시
+    (function () {
+      const bar = document.getElementById('noticeBar');
+      const modal = document.getElementById('noticeModal');
+      const header = document.querySelector('header.fixed');
+      if (!bar || !modal) return;
+
+      if (!POSTPONED) { bar.remove(); modal.remove(); return; }
+
+      const HIDE_KEY = 'hocampNoticeHideUntil';
+      const hideBox = document.getElementById('noticeHideToday');
+      let lastFocus = null;
+
+      // 상단 띠 높이만큼 메뉴를 아래로 내려 겹치지 않게 합니다
+      function layout() {
+        const h = bar.classList.contains('hidden') ? 0 : bar.getBoundingClientRect().height;
+        if (header) header.style.paddingTop = h + 'px';
+        document.documentElement.style.scrollPaddingTop = (h + 90) + 'px';
+      }
+
+      function openNotice() {
+        lastFocus = document.activeElement;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+        document.getElementById('noticeClose').focus();
+      }
+
+      function closeNotice() {
+        if (hideBox && hideBox.checked) {
+          const until = new Date(); until.setHours(23, 59, 59, 999);
+          try { localStorage.setItem(HIDE_KEY, String(until.getTime())); } catch (e) {}
+        }
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+        if (lastFocus) lastFocus.focus();
+      }
+
+      // 상단 띠는 항상 보이게 합니다 (팝업을 닫아도 공지가 남아야 하므로)
+      bar.classList.remove('hidden');
+      layout();
+      window.addEventListener('resize', layout);
+
+      // 팝업은 '오늘 하루 보지 않기'를 누른 당일에는 뜨지 않습니다
+      let hidden = false;
+      try {
+        const until = parseInt(localStorage.getItem(HIDE_KEY) || '0', 10);
+        hidden = Date.now() < until;
+      } catch (e) {}
+      if (!hidden) setTimeout(openNotice, 400);
+
+      document.getElementById('noticeClose').addEventListener('click', closeNotice);
+      document.getElementById('noticeBarMore').addEventListener('click', openNotice);
+      modal.querySelectorAll('[data-close-notice]').forEach(el => el.addEventListener('click', closeNotice));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeNotice();
+      });
+
+      // 참가신청 구간 문구를 보류 안내로 바꿉니다
+      const note = document.getElementById('applyOpenNote');
+      if (note) {
+        note.textContent = '긴급 공사로 페스티벌이 잠정 보류되었습니다';
+        note.classList.remove('text-gold-200');
+        note.classList.add('text-white');
+      }
+    })();
+
     // 참가 신청 — 오픈 전에는 안내 팝업, 오픈 후에는 구글폼으로 연결
     (function () {
       // ┌──────────────────────────────────────────────────────┐
@@ -1215,6 +1343,14 @@
       const modal = document.getElementById('applyModal');
       const btn = document.getElementById('applyBtn');
       if (!modal || !btn) return;
+
+      // 행사 보류 중에는 신청을 받지 않고 긴급 공지를 띄웁니다
+      if (POSTPONED) {
+        btn.addEventListener('click', () => {
+          document.getElementById('noticeBarMore').click();
+        });
+        return;
+      }
 
       const isOpen = () => Date.now() >= OPEN_AT.getTime();
 
