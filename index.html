@@ -862,17 +862,29 @@
         <div class="reveal grid gap-10 lg:grid-cols-12 lg:gap-14">
           <div class="lg:col-span-7">
             <span class="inline-flex items-center gap-2 rounded-full bg-forest-600/8 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.15em] text-forest-700">캠핑장 소개</span>
-            <h2 class="mt-5 text-4xl font-extrabold leading-snug tracking-tight text-forest-900 sm:text-5xl">너와두리캠핑장</h2>
-            <p class="mt-5 text-[16px] leading-snug text-stone-600">
-              충북 옥천에 자리한 너와두리캠핑장에서<br />
-              제9회 호캠프 페스티벌이 열립니다.
+            <h2 class="mt-5 text-4xl font-extrabold leading-snug tracking-tight text-forest-900 sm:text-5xl">너와두리 캠핑장</h2>
+            <p class="mt-5 text-[16px] leading-relaxed text-stone-600">
+              80팀이 한 번에 머물 수 있는 넓은 캠핑장입니다.<br />
+              전 구역이 새로 정비되어 사이트 간격이 여유롭고,<br />
+              운동장·물놀이터·에어바운스까지 갖춰<br />
+              페스티벌을 즐기기 좋은 대형 캠핑장<br />
+              충청북도 옥천군에 위치하여 전국에서 접근성이 좋은 캠핑장
             </p>
 
-            <div class="mt-8 flex flex-wrap gap-3">
-              <a href="https://place.map.kakao.com/21054992" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-2.5 rounded-full bg-forest-600 pl-6 pr-2.5 py-3.5 text-[15px] font-semibold text-white u-ease hover:scale-[1.02] active:scale-[0.98] hover:bg-forest-500 shadow-[0_16px_36px_-14px_rgba(31,107,71,0.7)]">
-                지도에서 보기
-                <span class="grid h-8 w-8 place-items-center rounded-full bg-gold-400 text-forest-900"><iconify-icon icon="solar:arrow-right-up-linear" class="u-ease group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></iconify-icon></span>
+            <p class="mt-5 flex items-start gap-2 text-[15px] font-semibold text-forest-800">
+              <iconify-icon icon="solar:map-point-bold" class="mt-0.5 shrink-0 text-gold-600"></iconify-icon>
+              충북 옥천군 청성면 한두레로 387
+            </p>
+
+            <!-- 카카오맵 (스카이뷰) -->
+            <div class="mt-6 max-w-[504px] overflow-hidden rounded-2xl border border-forest-600/15 shadow-soft">
+              <a href="https://map.kakao.com/?urlX=663635&amp;urlY=786053&amp;urlLevel=3&amp;map_type=TYPE_SKYVIEW&amp;map_hybrid=true" target="_blank" rel="noopener noreferrer" class="block">
+                <img src="https://staticmap.kakao.com/map/skyviewmapservice?FORMAT=PNG&amp;RDR=HybridRender&amp;SCALE=2.5&amp;MX=663632&amp;MY=786052&amp;S=0&amp;IW=504&amp;IH=310&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo" width="504" height="310" alt="너와두리 캠핑장 위치 — 충북 옥천군 청성면 한두레로 387" loading="lazy" decoding="async" class="block h-auto w-full" />
               </a>
+              <div class="flex items-center justify-between gap-3 bg-stone-50 px-3 py-2">
+                <img src="https://t1.kakaocdn.net/localimg/localimages/07/2018/pc/common/logo_kakaomap.png" width="72" height="16" alt="카카오맵" loading="lazy" decoding="async" class="h-4 w-auto" />
+                <a href="https://map.kakao.com/?urlX=663635&amp;urlY=786053&amp;urlLevel=3&amp;map_type=TYPE_SKYVIEW&amp;map_hybrid=true" target="_blank" rel="noopener noreferrer" class="text-[12px] font-medium text-stone-700 u-ease hover:text-forest-700 hover:underline">지도 크게 보기</a>
+              </div>
             </div>
           </div>
 
@@ -898,6 +910,24 @@
                     <span class="text-[17px] font-extrabold text-gold-700">40만원</span>
                   </li>
                 </ul>
+
+                <!-- 참가비 포함 사항 -->
+                <div class="mt-7 border-t border-forest-600/12 pt-6">
+                  <p class="flex items-center gap-2 text-[14px] font-bold text-forest-900">
+                    <iconify-icon icon="solar:check-circle-bold" class="text-gold-600"></iconify-icon>참가비 포함 사항
+                  </p>
+                  <ul class="mt-3.5 space-y-2">
+                    <li class="flex items-start gap-2 text-[14.5px] leading-snug text-stone-700"><iconify-icon icon="solar:check-read-linear" class="mt-0.5 shrink-0 text-forest-500"></iconify-icon>2박 3일 캠핑장 및 펜션 이용료</li>
+                    <li class="flex items-start gap-2 text-[14.5px] leading-snug text-stone-700"><iconify-icon icon="solar:check-read-linear" class="mt-0.5 shrink-0 text-forest-500"></iconify-icon>푸짐한 웰컴 기프트</li>
+                    <li class="flex items-start gap-2 text-[14.5px] leading-snug text-stone-700"><iconify-icon icon="solar:check-read-linear" class="mt-0.5 shrink-0 text-forest-500"></iconify-icon>다양한 행사 프로그램</li>
+                    <li class="flex items-start gap-2 text-[14.5px] leading-snug text-stone-700"><iconify-icon icon="solar:check-read-linear" class="mt-0.5 shrink-0 text-forest-500"></iconify-icon>경품 이벤트</li>
+                  </ul>
+
+                  <div class="mt-5 rounded-2xl border border-gold-400/40 bg-gold-50 px-4 py-3.5">
+                    <p class="text-[13.5px] font-semibold leading-snug text-forest-800">일부 프로그램은 별도의 비용이 발생합니다.</p>
+                    <p class="mt-1.5 text-[13.5px] text-stone-600">* 레이저 태그 서바이벌</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1127,7 +1157,7 @@
           <div>
             <p class="text-[12px] font-medium uppercase tracking-wider text-stone-400">연결</p>
             <ul class="mt-4 space-y-2.5 text-[14px] text-stone-600">
-              <li><a href="https://place.map.kakao.com/21054992" target="_blank" rel="noopener noreferrer" class="u-ease hover:text-gold-700">캠핑장 위치 ↗</a></li>
+              <li><a href="https://map.kakao.com/?urlX=663635&amp;urlY=786053&amp;urlLevel=3&amp;map_type=TYPE_SKYVIEW&amp;map_hybrid=true" target="_blank" rel="noopener noreferrer" class="u-ease hover:text-gold-700">캠핑장 위치 ↗</a></li>
               <li><a href="#apply" class="u-ease hover:text-gold-700">참가 신청</a></li>
               <li><button type="button" id="partnerBtn" class="u-ease text-left hover:text-gold-700">파트너사 문의</button></li>
             </ul>
