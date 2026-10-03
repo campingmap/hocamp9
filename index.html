@@ -257,6 +257,27 @@
 
 <body class="noise bg-white text-stone-700 font-sans antialiased selection:bg-gold-300/40 selection:text-forest-900 min-h-[100dvh]">
 
+  <!--
+    참가자 안내 팝업
+    · 이미지 교체 : hocamp-notice.png 파일만 바꾸면 됩니다
+    · 끄고 싶을 때 : 아래 스크립트의 const NOTICE_ON = true; 를 false 로
+  -->
+  <div id="noticePop" class="fixed inset-0 z-[90] hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="참가자 안내">
+    <div class="absolute inset-0 bg-forest-900/70 backdrop-blur-sm" data-close-pop></div>
+    <div class="relative flex max-h-full w-full max-w-[420px] flex-col">
+      <a href="https://cafe.naver.com/hocamp" target="_blank" rel="noopener noreferrer" class="block overflow-hidden rounded-[1.5rem] shadow-softlg u-ease hover:-translate-y-1">
+        <img src="hocamp-notice.png" alt="호캠프 페스티벌 참가자 안내 — 호캠단 네이버 카페에서 공지사항을 확인해 주세요" width="800" height="1000" class="block h-auto w-full" />
+      </a>
+      <div class="mt-3 flex items-center justify-between gap-3 rounded-full bg-white/95 px-4 py-2.5 backdrop-blur">
+        <label class="flex cursor-pointer items-center gap-2 text-[13px] font-medium text-stone-600">
+          <input type="checkbox" id="popHideToday" class="h-4 w-4 rounded border-stone-300 text-forest-600 focus:ring-forest-500" />
+          오늘 하루 보지 않기
+        </label>
+        <button type="button" id="popClose" class="rounded-full bg-forest-600 px-5 py-2 text-[13px] font-semibold text-white u-ease hover:bg-forest-500">닫기</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= BACKGROUND FIELD ================= -->
   <div aria-hidden="true" class="fixed inset-0 -z-10 overflow-hidden">
     <div class="absolute inset-0 bg-white"></div>
@@ -1340,6 +1361,43 @@
 
       render();
       schedule();
+    })();
+
+    // 참가자 안내 팝업 — 접속 시 1회, '오늘 하루 보지 않기' 선택 시 당일 숨김
+    (function () {
+      const NOTICE_ON = true;
+      const pop = document.getElementById('noticePop');
+      if (!pop) return;
+      if (!NOTICE_ON) { pop.remove(); return; }
+
+      const KEY = 'hocampNoticePopHideUntil';
+      const box = document.getElementById('popHideToday');
+      let hidden = false;
+      try { hidden = Date.now() < parseInt(localStorage.getItem(KEY) || '0', 10); } catch (e) {}
+      if (hidden) return;
+
+      function close() {
+        if (box && box.checked) {
+          const until = new Date(); until.setHours(23, 59, 59, 999);
+          try { localStorage.setItem(KEY, String(until.getTime())); } catch (e) {}
+        }
+        pop.classList.add('hidden');
+        pop.classList.remove('flex');
+        document.body.style.overflow = '';
+      }
+
+      setTimeout(() => {
+        pop.classList.remove('hidden');
+        pop.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+        document.getElementById('popClose').focus();
+      }, 500);
+
+      document.getElementById('popClose').addEventListener('click', close);
+      pop.querySelectorAll('[data-close-pop]').forEach(el => el.addEventListener('click', close));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !pop.classList.contains('hidden')) close();
+      });
     })();
 
     // 캠핑장 사진 슬라이드 — .vp-grid 안의 사진 개수에 맞춰 자동으로 만들어집니다
